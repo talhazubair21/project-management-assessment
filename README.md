@@ -15,8 +15,20 @@ React project with typescript for frontend assesment
 
 ### **Installation**
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/your-username/project-management.git
-   cd project-management
-   ```
+## Getting Started
+
+### Installation
+
+1. Install dependencies:
+
+```bash
+yarn install
+```
+
+### Running
+
+1.  Starting the server:
+
+```bash
+yarn dev
+```
