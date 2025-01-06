@@ -5,9 +5,10 @@ import ProjectForm from "../modules/Project/ProjectForm";
 
 const ProjectDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const safeId = id ?? "defaultId";
   return (
     <Layout>
-      <ProjectForm id={id} />
+      <ProjectForm id={safeId} />
     </Layout>
   );
 };

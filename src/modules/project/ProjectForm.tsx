@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   TextField,
@@ -14,22 +14,37 @@ import { LocalizationProvider } from "@mui/x-date-pickers-pro/LocalizationProvid
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import { PROJECT_MANAGERS } from "../../config";
+import { getProject, updateProject } from "../../api";
+import { Project } from "../../interfaces/Project";
 
 interface ProjectFormProps {
-  id: string | undefined;
+  id: string;
 }
 
 interface FormData {
   id: string;
   name: string;
   description: string;
-  startDate: Date | null;
-  endDate: Date | null;
+  startDate: string;
+  endDate: string;
   projectManager: string;
 }
 
 const ProjectForm: React.FC<ProjectFormProps> = ({ id }) => {
   const navigate = useNavigate();
+
+  const [project, setProject] = useState<Project | null>(null);
+
+  const loadData = async () => {
+    if (id) {
+      const project = await getProject(id);
+      setProject(project);
+    }
+  };
+
+  useEffect(() => {
+    loadData();
+  }, [id]);
 
   const {
     control,
@@ -41,8 +56,8 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ id }) => {
       id: "",
       name: "",
       description: "",
-      startDate: null,
-      endDate: null,
+      startDate: "",
+      endDate: "",
       projectManager: "",
     },
   });
@@ -51,25 +66,20 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ id }) => {
     navigate("/projects");
   };
 
-  const onSubmit = (data: FormData) => {
-    const formattedData = {
-      ...data,
-      startDate: data.startDate ? dayjs(data.startDate).toISOString() : null,
-      endDate: data.endDate ? dayjs(data.endDate).toISOString() : null,
-    };
-    console.log(formattedData);
+  const onSubmit = async (data: FormData) => {
+    try {
+      const formattedData: Project = {
+        ...data,
+        startDate: dayjs(data.startDate).toISOString(),
+        endDate: dayjs(data.endDate).toISOString(),
+      };
+      await updateProject(id, formattedData);
+      window.location.href = "/projects";
+    } catch (error) {}
   };
 
   useEffect(() => {
-    if (id) {
-      const project = {
-        id: "1",
-        name: "Project Alpha",
-        description: "This project is about developing an e-commerce platform.",
-        startDate: new Date("2025-01-10T00:00:00Z"),
-        endDate: new Date("2025-06-01T00:00:00Z"),
-        projectManager: "Alice",
-      };
+    if (id && project) {
       setValue("id", project.id);
       setValue("name", project.name);
       setValue("description", project.description);
@@ -77,7 +87,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ id }) => {
       setValue("endDate", project.endDate);
       setValue("projectManager", project.projectManager);
     }
-  }, [id, setValue]);
+  }, [id, project, setValue]);
 
   return (
     <div className="p-4 space-y-4">

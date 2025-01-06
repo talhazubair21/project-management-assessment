@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   Table,
@@ -11,59 +11,21 @@ import {
   Button,
 } from "@mui/material";
 import { formatDate } from "../../utils";
-
-const projects = [
-  {
-    id: "1",
-    name: "Project A",
-    description: "This is the description of Project A",
-    startDate: "2025-01-10T00:00:00Z",
-    endDate: "2025-06-01T00:00:00Z",
-    projectManager: "Alice",
-  },
-  {
-    id: "2",
-    name: "Project B",
-    description: "This is the description of Project B",
-    startDate: "2025-02-15T00:00:00Z",
-    endDate: "2025-07-01T00:00:00Z",
-    projectManager: "Bob",
-  },
-  {
-    id: "3",
-    name: "Project C",
-    description: "This is the description of Project C",
-    startDate: "2025-03-10T00:00:00Z",
-    endDate: "2025-08-20T00:00:00Z",
-    projectManager: "Charlie",
-  },
-  {
-    id: "4",
-    name: "Project D",
-    description: "This is the description of Project D",
-    startDate: "2025-04-01T00:00:00Z",
-    endDate: "2025-09-01T00:00:00Z",
-    projectManager: "Alice",
-  },
-  {
-    id: "5",
-    name: "Project E",
-    description: "This is the description of Project E",
-    startDate: "2025-05-05T00:00:00Z",
-    endDate: "2025-10-15T00:00:00Z",
-    projectManager: "David",
-  },
-  {
-    id: "6",
-    name: "Project F",
-    description: "This is the description of Project F",
-    startDate: "2025-06-10T00:00:00Z",
-    endDate: "2025-11-01T00:00:00Z",
-    projectManager: "Eve",
-  },
-];
+import { Project } from "../../interfaces/Project";
+import { getProjects } from "../../api";
 
 const ProjectTable: React.FC = () => {
+  const [projects, setProjects] = useState<Project[]>([]);
+
+  const loadData = async () => {
+    const projects = await getProjects();
+    setProjects(projects);
+  };
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
   return (
     <div className="p-4 space-y-4">
       <h1 className="font-bold text-xl">Projects</h1>
@@ -80,7 +42,7 @@ const ProjectTable: React.FC = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {projects.map((project) => (
+            {projects.map((project: Project) => (
               <TableRow key={project.id}>
                 <TableCell>{project.id}</TableCell>
                 <TableCell>{project.name}</TableCell>
