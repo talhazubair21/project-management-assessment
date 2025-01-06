@@ -33,7 +33,11 @@ module.exports = {
       template: "./public/index.html",
     }),
   ],
+  output: {
+    publicPath: "/",
+  },
   devServer: {
+    historyApiFallback: true,
     static: path.resolve(__dirname, "dist"),
     port: 3000,
     open: true,
