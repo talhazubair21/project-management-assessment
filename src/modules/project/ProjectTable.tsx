@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   Table,
@@ -17,10 +17,10 @@ import { getProjects } from "../../api";
 const ProjectTable: React.FC = () => {
   const [projects, setProjects] = useState<Project[]>([]);
 
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     const projects = await getProjects();
     setProjects(projects);
-  };
+  }, []);
 
   useEffect(() => {
     loadData();

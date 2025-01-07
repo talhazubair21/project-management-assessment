@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Button,
   TextField,
@@ -35,12 +35,12 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ id }) => {
 
   const [project, setProject] = useState<Project | null>(null);
 
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     if (id) {
       const project = await getProject(id);
       setProject(project);
     }
-  };
+  }, []);
 
   useEffect(() => {
     loadData();

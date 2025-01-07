@@ -5,10 +5,14 @@ import ProjectForm from "../modules/Project/ProjectForm";
 
 const ProjectDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const safeId = id ?? "defaultId";
+  const safeId = id ?? "default";
   return (
     <Layout>
-      <ProjectForm id={safeId} />
+      {safeId !== "default" ? (
+        <ProjectForm id={safeId} />
+      ) : (
+        <div>No Matching Document</div>
+      )}
     </Layout>
   );
 };
