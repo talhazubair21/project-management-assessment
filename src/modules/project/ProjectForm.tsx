@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect } from "react";
+import dayjs from "dayjs";
+import { useNavigate } from "react-router-dom";
+import { useForm, Controller } from "react-hook-form";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { AdapterDayjs } from "@mui/x-date-pickers-pro/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers-pro/LocalizationProvider";
 import {
   Button,
   TextField,
@@ -7,15 +13,12 @@ import {
   InputLabel,
   FormControl,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import { useForm, Controller } from "react-hook-form";
-import { AdapterDayjs } from "@mui/x-date-pickers-pro/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers-pro/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import dayjs from "dayjs";
+import {
+  useGetProject,
+  useUpdateProject,
+} from "../../api/projects/project.query";
 import { PROJECT_MANAGERS } from "../../config";
-import { getProject, updateProject } from "../../api";
-import { Project } from "../../interfaces/Project";
+import { Project } from "../../api/projects/project.types";
 
 interface ProjectFormProps {
   id: string;
@@ -32,19 +35,8 @@ interface FormData {
 
 const ProjectForm: React.FC<ProjectFormProps> = ({ id }) => {
   const navigate = useNavigate();
-
-  const [project, setProject] = useState<Project | null>(null);
-
-  const loadData = useCallback(async () => {
-    if (id) {
-      const project = await getProject(id);
-      setProject(project);
-    }
-  }, []);
-
-  useEffect(() => {
-    loadData();
-  }, [id]);
+  const { data: project } = useGetProject(id);
+  const { mutate: updateProject } = useUpdateProject();
 
   const {
     control,
@@ -67,15 +59,12 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ id }) => {
   };
 
   const onSubmit = async (data: FormData) => {
-    try {
-      const formattedData: Project = {
-        ...data,
-        startDate: dayjs(data.startDate).toISOString(),
-        endDate: dayjs(data.endDate).toISOString(),
-      };
-      await updateProject(id, formattedData);
-      window.location.href = "/projects";
-    } catch (error) {}
+    const formattedData: Project = {
+      ...data,
+      startDate: dayjs(data.startDate).toISOString(),
+      endDate: dayjs(data.endDate).toISOString(),
+    };
+    updateProject(formattedData);
   };
 
   useEffect(() => {

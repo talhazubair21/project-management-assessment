@@ -1,6 +1,6 @@
 import axios from "axios";
 import MockAdapter from "axios-mock-adapter";
-import { Project } from "../interfaces/Project";
+import { Project } from "../api/projects/project.types";
 
 const mock = new MockAdapter(axios);
 

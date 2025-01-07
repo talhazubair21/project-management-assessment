@@ -11,20 +11,12 @@ import {
   Button,
 } from "@mui/material";
 import { formatDate } from "../../utils";
-import { Project } from "../../interfaces/Project";
-import { getProjects } from "../../api";
+
+import { useGetProjects } from "../../api/projects/project.query";
+import { Project } from "../../api/projects/project.types";
 
 const ProjectTable: React.FC = () => {
-  const [projects, setProjects] = useState<Project[]>([]);
-
-  const loadData = useCallback(async () => {
-    const projects = await getProjects();
-    setProjects(projects);
-  }, []);
-
-  useEffect(() => {
-    loadData();
-  }, []);
+  const { data: projects } = useGetProjects();
 
   return (
     <div className="p-4 space-y-4">
@@ -42,7 +34,7 @@ const ProjectTable: React.FC = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {projects.map((project: Project) => (
+            {projects?.map((project: Project) => (
               <TableRow key={project.id}>
                 <TableCell>{project.id}</TableCell>
                 <TableCell>{project.name}</TableCell>

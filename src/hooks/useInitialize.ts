@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { seedDB } from "../api/seed";
+import { seedDB } from "../mock-adaptor/seed";
 
 const useInitialize = () => {
   useEffect(() => {

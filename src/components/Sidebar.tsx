@@ -1,8 +1,7 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import { getFavProjects } from "../api";
-import { Project } from "../interfaces/Project";
 import styled from "styled-components";
+import { useGetFavProjects } from "../api/projects/project.query";
 
 const StyledLink = styled(Link)`
   color: white;
@@ -14,16 +13,7 @@ const StyledLink = styled(Link)`
 `;
 
 const Sidebar: React.FC = () => {
-  const [projects, setProjects] = useState<Project[]>([]);
-
-  const loadData = useCallback(async () => {
-    const projects = await getFavProjects();
-    setProjects(projects);
-  }, []);
-
-  useEffect(() => {
-    loadData();
-  }, []);
+  const { data: favProjects } = useGetFavProjects();
 
   return (
     <div className="w-screen md:w-64 bg-gray-800 text-white p-4 min-h-20 md:min-h-screen">
@@ -32,7 +22,7 @@ const Sidebar: React.FC = () => {
       </div>
       <h2 className="text-2xl font-bold mb-6">Favorite Projects</h2>
       <ul>
-        {projects.map((project) => {
+        {favProjects?.map((project) => {
           return (
             <li className="mb-4" key={project.id}>
               <Link

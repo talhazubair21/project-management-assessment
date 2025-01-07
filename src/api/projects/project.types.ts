@@ -6,3 +6,7 @@ export interface Project {
   endDate: string;
   projectManager: string;
 }
+
+export type UpdateProjectPayload = Project;
+export type GetProjectsResponse = Project[];
+export type GetProjectResponse = Project;
