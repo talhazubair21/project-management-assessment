@@ -51,13 +51,13 @@ const Projects: React.FC = () => {
             </TableHead>
             <TableBody>
               {projects?.map((project: FavProject) => (
-                <TableRow
-                  key={project.id}
-                  hover
-                  onClick={() => navigate(`/project/${project.id}/view`)}
-                  className="cursor-pointer"
-                >
-                  <TableCell>{project.id}</TableCell>
+                <TableRow key={project.id}>
+                  <TableCell
+                    className="cursor-pointer"
+                    onClick={() => navigate(`/project/${project.id}/view`)}
+                  >
+                    {project.id}
+                  </TableCell>
                   <TableCell>{project.name}</TableCell>
                   <TableCell>{formatDate(project.startDate)}</TableCell>
                   <TableCell>{formatDate(project.endDate)}</TableCell>
@@ -73,10 +73,7 @@ const Projects: React.FC = () => {
                     <Button
                       variant="contained"
                       size="small"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        navigate(`/project/${project.id}`);
-                      }}
+                      onClick={(e) => navigate(`/project/${project.id}`)}
                     >
                       Edit
                     </Button>

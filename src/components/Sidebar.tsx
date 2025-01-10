@@ -32,7 +32,7 @@ const Sidebar: React.FC = () => {
             return (
               <li className="mb-4" key={project.id}>
                 <Link
-                  to={`/project/${project.id}`}
+                  to={`/project/${project.id}/view`}
                   className="text-white hover:text-gray-400"
                 >
                   {project.name}
