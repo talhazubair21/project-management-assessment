@@ -1,16 +1,17 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { appQueryClient } from "../queryClient";
+import { ACTION_KEYS, QUERY_KEYS } from "../queryKeys";
 import {
   UpdateProjectPayload,
   GetProjectResponse,
   GetProjectsResponse,
 } from "./project.types";
-import { ACTION_KEYS, QUERY_KEYS } from "../queryKeys";
-import { toast } from "react-toastify";
-import axios from "axios";
 
 export const useUpdateProject = () => {
-  const queryClient = useQueryClient();
-
+  const navigate = useNavigate();
   return useMutation({
     mutationKey: [QUERY_KEYS.PROJECT, ACTION_KEYS.UPDATE],
     mutationFn: async (payload: UpdateProjectPayload) => {
@@ -20,17 +21,48 @@ export const useUpdateProject = () => {
       );
       return data;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.PROJECT, ACTION_KEYS.GET],
+    onSuccess: async () => {
+      toast.success("Project updated successfully", {
+        toastId: "project-updated",
       });
-      queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.FAV_PROJECT, ACTION_KEYS.GET],
+      await appQueryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.PROJECT],
       });
-      window.location.href = "/projects";
+      await appQueryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.FAV_PROJECT],
+      });
+      // window.location.href = "/projects";
+      // navigate("/projects");
     },
     onError: (error) => {
-      toast.error("Error updating project");
+      toast.error("Error creating project", {
+        toastId: "creating-project",
+      });
+    },
+  });
+};
+
+export const useCreateProject = () => {
+  const navigate = useNavigate();
+  return useMutation({
+    mutationKey: [QUERY_KEYS.PROJECT, ACTION_KEYS.CREATE],
+    mutationFn: async (payload: UpdateProjectPayload) => {
+      const { data } = await axios.post<boolean>(`/api/projects`, payload);
+      return data;
+    },
+    onSuccess: () => {
+      toast.success("Project created successfully", {
+        toastId: "project-updated",
+      });
+      appQueryClient.invalidateQueries({ queryKey: [QUERY_KEYS.PROJECT] });
+      appQueryClient.invalidateQueries({ queryKey: [QUERY_KEYS.FAV_PROJECT] });
+      window.location.href = "/projects";
+      // navigate("/projects");
+    },
+    onError: (error) => {
+      toast.error("Error updating project", {
+        toastId: "update-project",
+      });
     },
   });
 };
@@ -43,7 +75,9 @@ export const useGetProjects = () => {
       return data;
     },
     throwOnError(error) {
-      toast.error("Failed to fetch projects");
+      toast.error("Failed to fetch projects", {
+        toastId: "get-projects",
+      });
       return false;
     },
   });
@@ -59,13 +93,15 @@ export const useGetFavProjects = () => {
       return data;
     },
     throwOnError(error) {
-      toast.error("Failed to fetch fav projects");
+      toast.error("Failed to fetch fav projects", {
+        toastId: "get-fav-project",
+      });
       return false;
     },
   });
 };
 
-export const useGetProject = (id: string) => {
+export const useGetProject = (id: string, enabled: boolean = true) => {
   return useQuery({
     queryKey: [QUERY_KEYS.PROJECT, ACTION_KEYS.GET_BY_ID, id],
     queryFn: async () => {
@@ -74,9 +110,37 @@ export const useGetProject = (id: string) => {
       );
       return data;
     },
+    enabled,
     throwOnError(error) {
-      toast.error("Failed to fetch project detail");
+      toast.error("Failed to fetch project detail", { toastId: "get-project" });
       return false;
+    },
+  });
+};
+
+export const useUpdateFavProject = () => {
+  const navigate = useNavigate();
+  return useMutation({
+    mutationKey: [QUERY_KEYS.PROJECT, ACTION_KEYS.UPDATE],
+    mutationFn: async (projectId: string) => {
+      const { data } = await axios.put<boolean>(
+        `/api/projects/${projectId}/fav`
+      );
+      return data;
+    },
+    onSuccess: () => {
+      toast.success("Project favorite status modified", {
+        toastId: "project-fav-action-successfuly",
+      });
+      appQueryClient.invalidateQueries({ queryKey: [QUERY_KEYS.PROJECT] });
+      appQueryClient.invalidateQueries({ queryKey: [QUERY_KEYS.FAV_PROJECT] });
+      window.location.href = window.location.href;
+      navigate(window.location.href);
+    },
+    onError: (error) => {
+      toast.error("Error modifying the fav status", {
+        toastId: "making-project-fav",
+      });
     },
   });
 };

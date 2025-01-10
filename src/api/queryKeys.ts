@@ -4,6 +4,7 @@ export enum QUERY_KEYS {
 }
 
 export enum ACTION_KEYS {
+  CREATE = "create",
   UPDATE = "update",
   GET = "get",
   GET_BY_ID = "GET_BY_ID",

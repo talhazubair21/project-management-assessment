@@ -49,7 +49,7 @@ const projects = [
   },
 ];
 
-const favProjectIds = ["1", "2", "3"];
+const favProjectIds = ["1", "2"];
 
 export const seedDB = () => {
   if (!localStorage.getItem("projects")) {

@@ -7,6 +7,10 @@ export interface Project {
   projectManager: string;
 }
 
-export type UpdateProjectPayload = Project;
-export type GetProjectsResponse = Project[];
-export type GetProjectResponse = Project;
+export interface FavProject extends Project {
+  isFav: boolean;
+}
+
+export type UpdateProjectPayload = FavProject;
+export type GetProjectsResponse = FavProject[];
+export type GetProjectResponse = FavProject;

@@ -1,15 +1,14 @@
-import React, { ReactNode } from "react";
+import React from "react";
 import Sidebar from "./Sidebar";
+import { Outlet } from "react-router-dom";
 
-interface LayoutProps {
-  children: ReactNode;
-}
-
-const Layout: React.FC<LayoutProps> = ({ children }) => {
+const Layout: React.FC = () => {
   return (
     <div className="flex flex-col md:flex-row">
       <Sidebar />
-      <div>{children}</div>
+      <div className="w-full">
+        <Outlet />
+      </div>
     </div>
   );
 };
