@@ -1,5 +1,6 @@
 import React from "react";
 import { Favorite, FavoriteBorder } from "@mui/icons-material";
+import { CircularProgress } from "@mui/material";
 
 interface ProjectFavoriteTogglerProps {
   isFav: boolean;

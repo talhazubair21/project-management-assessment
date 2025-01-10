@@ -18,7 +18,9 @@ const getProjectsFromLocalStorage = () => {
   }));
 };
 
-mock.onGet("/api/projects").reply(200, getProjectsFromLocalStorage());
+mock.onGet("/api/projects").reply(() => {
+  return [200, getProjectsFromLocalStorage()];
+});
 
 // GET FAV PROJECTS
 const getFavoriteProjectsFromLocalStorage = () => {
@@ -32,9 +34,9 @@ const getFavoriteProjectsFromLocalStorage = () => {
   );
 };
 
-mock
-  .onGet("/api/projects/fav")
-  .reply(200, getFavoriteProjectsFromLocalStorage());
+mock.onGet("/api/projects/fav").reply(() => {
+  return [200, getFavoriteProjectsFromLocalStorage()];
+});
 
 // PROJECT FAV
 mock.onPut(/\/api\/projects\/(\d+)\/fav/).reply((config) => {

@@ -21,7 +21,8 @@ import ProjectFavoriteToggler from "../components/ProjectFavoriteToggler";
 
 const Projects: React.FC = () => {
   const { data: projects, isLoading: isProjectsLoading } = useGetProjects();
-  const { mutate: updateProjectFavStatus } = useUpdateFavProject();
+  const { mutate: updateProjectFavStatus, isPending: isUpdatingFav } =
+    useUpdateFavProject();
   const navigate = useNavigate();
 
   return (

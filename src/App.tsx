@@ -2,7 +2,6 @@ import React from "react";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { appQueryClient } from "./api/queryClient";
 import useInitialize from "./hooks/useInitialize";
 import "./mock-adaptor/mock-adaptor";
@@ -13,8 +12,7 @@ const App: React.FC = () => {
   return (
     <QueryClientProvider client={appQueryClient}>
       <AppRoutes />
-      <ToastContainer />
-      <ReactQueryDevtools initialIsOpen={false} />
+      <ToastContainer position="bottom-right" />
     </QueryClientProvider>
   );
 };
