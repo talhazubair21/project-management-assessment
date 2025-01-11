@@ -9,5 +9,5 @@
     "moduleResolution": "node",
     "outDir": "./dist"
   },
-  "include": ["src"]
+  "include": ["src", "jest.setup.ts", "jest.config.ts"]
 }
